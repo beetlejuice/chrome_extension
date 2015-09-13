@@ -1,0 +1,26 @@
+{
+  "name": "My VK",
+  "version": "0.1",
+  "manifest_version": 2,
+
+  "background": {
+    "scripts": ["background.js"]
+   },
+
+  "page_action": {
+      "default_icon": "icon_38.png",
+      "default_title": "My VK"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://vk.com/search*", "https://vk.com/search*"],
+      "js": ["contentscript.js"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "permissions": ["http://*/*", "https://*/*", "tabs", "webNavigation"],
+
+  "web_accessible_resources": ["scripts/*"]
+}
