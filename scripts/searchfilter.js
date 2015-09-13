@@ -16,8 +16,8 @@ if (displayedPeople.length != 0) {
   for (var i = 0; i < displayedPeople.length - 1; ++i) {
     var id = getId(displayedPeople[i]);
     var hideList = getHideList();
-    if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items, that have been hidden
-      displayedPeople[i].style.display = "none";
+    if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
+      displayedPeople[i].style.display = "none";  // need to play with this, maybe remove div permanently to speed up node disappearing
     }
   }
 }
