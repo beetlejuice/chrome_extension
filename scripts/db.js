@@ -3,9 +3,11 @@ myVK.indexedDB = {};
 
 myVK.indexedDB.db = null;
 
+const dbVersion = 1;
+
 myVK.indexedDB.open = function() {
-  var version = 1;
-  var request = indexedDB.open("Users", version);
+  // var version = 1;
+  var request = indexedDB.open("Users", dbVersion);
 
   request.onupgradeneeded = function(event) {
     var db = event.target.result;
@@ -30,80 +32,85 @@ myVK.indexedDB.open = function() {
   request.onerror = myVK.indexedDB.onerror;
 };
 
-// Main stuff here
-myVK.indexedDB.getUser = function(userId) {
-  var db = myVK.indexedDB.db;
-  var trans = db.transaction(["user"], "readwrite");
-  var store = trans.objectStore("user");
+// myVK.indexedDB.getUser = function(userId) {
+//   var db = myVK.indexedDB.db;
+//   var trans = db.transaction(["user"], "readwrite");
+//   var store = trans.objectStore("user");
 
-  var request = store.get(userId);
+//   var request = store.get(userId);
 
-  var isUserProcessed = false;
+//   var isUserProcessed = false;
 
-  request.onsuccess = function(event) {
-    console.log("User read successful!");
-    if (request.result != null) {
-      isUserProcessed = true;
-    }
-  };
+//   request.onsuccess = function(event) {
+//     console.log("User read successful!");
+//     if (request.result != null) {
+//       isUserProcessed = true;
+//     }
+//   };
 
-  request.onerror = function(event) {
-    console.log(event.value);
-  };
+//   request.onerror = function(event) {
+//     console.log(event.value);
+//   };
 
-  return isUserProcessed; 
-};
+//   return isUserProcessed; 
+// };
 
 myVK.indexedDB.getAllUsers = function() {
-  var db = myVK.indexedDB.db;
-  var trans = db.transaction(["user"], "readwrite");
-  var store = trans.objectStore("user");
-
-  // Get everything in the store;
-  var keyRange = IDBKeyRange.lowerBound(0);
-  var cursorRequest = store.openCursor(keyRange);
-
   var userIds = [];
+  var request = indexedDB.open("Users", dbVersion);
 
-  cursorRequest.onsuccess = function(event) {
-    var result = event.target.result;
-    if (!!result == false) return;
+  request.onsuccess = function(event) {
+    var db = event.target.result;
+    var trans = db.transaction(["user"], "readwrite");
+    var store = trans.objectStore("user");
 
-    userIds.push(result.id);
-    result.continue();
-  };
+    // Get everything in the store;
+    var keyRange = IDBKeyRange.lowerBound(0);
+    var cursorRequest = store.openCursor(keyRange);
 
-  request.onerror = function(event) {
-    console.log(event.value);
-  };
+    cursorRequest.onsuccess = function(event) {
+      var result = event.target.result;
+      if (!!result == false) return;
+
+      userIds.push(result.id);
+      result.continue();
+    };
+
+    request.onerror = function(event) {
+      console.log(event.value);
+    };
+  }
 
   return userIds; 
 };
 
 myVK.indexedDB.insertUser = function(userId, userRating) {
-  var db = myVK.indexedDB.db;
-  var trans = db.transaction(["user"], "readwrite");
-  var store = trans.objectStore("user");
-
-  var request = store.put({
-    "id": userId,
-    "rating": userRating
-  });
-
+  var request = indexedDB.open("Users", dbVersion);
+  
   request.onsuccess = function(event) {
-    console.log("User insert successful!");
-  };
+    var db = event.target.result;
+    var trans = db.transaction(["user"], "readwrite");
+    var store = trans.objectStore("user");
 
-  request.onerror = function(event) {
-    console.log(event.value);
-  };
+    var request = store.put({
+      "id": userId,
+      "rating": userRating
+    });
+
+    request.onsuccess = function(event) {
+      console.log("User insert successful!");
+    };
+
+    request.onerror = function(event) {
+      console.log(event.value);
+    };
+  }
 };
 
-function getUser(userId) {
-  return myVK.indexedDB.getUser(userId);
-}
+// function getUser(userId) {
+//   return myVK.indexedDB.getUser(userId);
+// }
 
-// Fires before DB is set up
 function getAllUsers() {
   return myVK.indexedDB.getAllUsers();
 }
