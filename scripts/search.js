@@ -8,24 +8,38 @@ function getId(searchDiv) {
   return profile_id;
 }
 
-function clickGood() {
-  alert('Good!');
-  return false;
+function rateButtonsHandler() {
+  id = this.id;
+  
+  userIdStartIndex = id.lastIndexOf("user") + 1;  // encapsulation violation here
+  userIdEndIndex = id.indexOf("_") - 1;  // encapsulation violation here
+  userId = id.slice(userIdStartIndex, userIdEndIndex);
+
+  userRatingStartIndex = id.lastIndexOf("user") + 1;  // encapsulation violation here
+  userRatingEndIndex = id.length;  // encapsulation violation here
+  userRating = id.slice(userRatingStartIndex, userRatingEndIndex);
+
+  insertUser(userId, userRating);
 }
 
-function clickBad() {
-  alert('Bad!');
-  return false;
-}
+// function clickGoodHandler(id) {
+// }
 
-function drawRateButtons(node) {
+// function clickBadHandler(id) {
+// }
+
+function drawRateButtons(node, nodeUserId) {
   var btnGood = document.createElement("button");
   btnGood.innerText = "Good";
-  btnGood.onclick = clickGood;
+  btnGood.id = "user" + nodeUserId + "_rating" + "Good";
+  // btnGood.onclick = clickGoodHandler;
+  btnGood.onclick = rateButtonsHandler;
 
   var btnBad = document.createElement("button");
   btnBad.innerText = "Bad";
-  btnBad.onclick = clickBad;
+  btnBad.id = "user" + nodeUserId + "_rating" + "Bad";
+  // btnBad.onclick = clickBadHandler;
+  btnGood.onclick = rateButtonsHandler;
 
   btnGood.style.float = "right";
   btnBad.style.float = "right";
@@ -35,7 +49,8 @@ function drawRateButtons(node) {
 }
 
 function getHideList() {
-  return HIDE_LIST;
+  // return HIDE_LIST;
+  return getAllUsers();
 }
 
 function getFilterState() {
@@ -46,15 +61,15 @@ function hideNode(node) {
   node.style.display = "none";  // need to play with this, maybe remove div permanently to speed up node disappearing
 }
 
-var displayedPeople = document.querySelectorAll(".people_row.three_col_row.clear_fix");
-if (displayedPeople.length != 0) {
-  for (var i = 0; i < displayedPeople.length - 1; i++) {
-    drawRateButtons(displayedPeople[i]);
+var displayedUsers = document.querySelectorAll(".people_row.three_col_row.clear_fix");
+if (displayedUsers.length != 0) {
+  for (var i = 0; i < displayedUsers.length - 1; i++) {
+    drawRateButtons(displayedUsers[i]);
 
-    var id = getId(displayedPeople[i]);
+    var id = getId(displayedUsers[i]);
     var hideList = getHideList();
     if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
-      hideNode(displayedPeople[i]);
+      hideNode(displayedUsers[i]);
     }
   }
 }

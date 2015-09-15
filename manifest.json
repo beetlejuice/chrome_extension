@@ -8,7 +8,7 @@
    },
 
   "page_action": {
-      "default_title": "My VK"
+    "default_title": "My VK"
   },
 
   "content_scripts": [
@@ -19,7 +19,7 @@
     }
   ],
 
-  "permissions": ["http://*/*", "https://*/*", "tabs", "webNavigation"],
+  "permissions": ["http://*/*", "https://*/*", "tabs", "webNavigation", "storage", "unlimitedStorage"],
 
   "web_accessible_resources": ["scripts/*"]
 }
