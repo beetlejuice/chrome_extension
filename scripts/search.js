@@ -10,12 +10,13 @@ function getId(searchDiv) {
 
 function rateButtonsHandler() {
   id = this.id;
-  
-  userIdStartIndex = id.lastIndexOf("user") + 1;  // encapsulation violation here
+
+  // button id format: user9294_ratingGood
+  userIdStartIndex = id.indexOf("user") + 4;  // encapsulation violation here
   userIdEndIndex = id.indexOf("_") - 1;  // encapsulation violation here
   userId = id.slice(userIdStartIndex, userIdEndIndex);
 
-  userRatingStartIndex = id.lastIndexOf("user") + 1;  // encapsulation violation here
+  userRatingStartIndex = id.indexOf("rating") + 6;  // encapsulation violation here
   userRatingEndIndex = id.length;  // encapsulation violation here
   userRating = id.slice(userRatingStartIndex, userRatingEndIndex);
 
@@ -64,9 +65,9 @@ function hideNode(node) {
 var displayedUsers = document.querySelectorAll(".people_row.three_col_row.clear_fix");
 if (displayedUsers.length != 0) {
   for (var i = 0; i < displayedUsers.length - 1; i++) {
-    drawRateButtons(displayedUsers[i]);
-
     var id = getId(displayedUsers[i]);
+    drawRateButtons(displayedUsers[i], id);
+
     var hideList = getHideList();
     if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
       hideNode(displayedUsers[i]);
