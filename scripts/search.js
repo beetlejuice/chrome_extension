@@ -1,4 +1,4 @@
-var HIDE_LIST = ["9239849", "256150206"];
+// var HIDE_LIST = ["9239849", "256150206"];
 var FILTER_ENABLED = true;
 
 function getId(searchDiv) {
@@ -11,9 +11,9 @@ function getId(searchDiv) {
 function rateButtonsHandler() {
   id = this.id;
 
-  // button id format: user9294_ratingGood
+  // Button id format: user9294_ratingGood
   userIdStartIndex = id.indexOf("user") + 4;  // encapsulation violation here
-  userIdEndIndex = id.indexOf("_") - 1;  // encapsulation violation here
+  userIdEndIndex = id.indexOf("_");  // encapsulation violation here
   userId = id.slice(userIdStartIndex, userIdEndIndex);
 
   userRatingStartIndex = id.indexOf("rating") + 6;  // encapsulation violation here
@@ -49,9 +49,9 @@ function drawRateButtons(node, nodeUserId) {
   node.appendChild(btnBad);
 }
 
-function getHideList() {
+function hideUsers(callback) {
   // return HIDE_LIST;
-  return getAllUsers();
+  getAllUsers(callback);
 }
 
 function getFilterState() {
@@ -62,15 +62,18 @@ function hideNode(node) {
   node.style.display = "none";  // need to play with this, maybe remove div permanently to speed up node disappearing
 }
 
-var displayedUsers = document.querySelectorAll(".people_row.three_col_row.clear_fix");
-if (displayedUsers.length != 0) {
-  for (var i = 0; i < displayedUsers.length - 1; i++) {
-    var id = getId(displayedUsers[i]);
-    drawRateButtons(displayedUsers[i], id);
+function filterSearch(hideList) {
+  var displayedUsers = document.querySelectorAll(".people_row.three_col_row.clear_fix");
+  if (displayedUsers.length != 0) {
+    for (var i = 0; i < displayedUsers.length - 1; i++) {
+      var id = getId(displayedUsers[i]);
+      drawRateButtons(displayedUsers[i], id);
 
-    var hideList = getHideList();
-    if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
-      hideNode(displayedUsers[i]);
+      if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
+        hideNode(displayedUsers[i]);
+      }
     }
   }
 }
+
+hideUsers(filterSearch);

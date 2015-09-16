@@ -3,4 +3,5 @@ BUGS:
    So each time buttons become duplicated.
 2. Not called when I go to another VK chapter and go back with browser navigation.
 <!-- 3. Async DB init has not enough time to complete before performing get query, so db = undefined. -->
-4. Wrong calculation of userId and userRating.
+<!-- 4. Wrong calculation of userId and userRating. -->
+5. Node is not hidden after mark as "Good" or "Bad": onsuccess is not called synchronous.

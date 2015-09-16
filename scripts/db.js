@@ -11,21 +11,16 @@ myVK.indexedDB.open = function() {
 
   request.onupgradeneeded = function(event) {
     var db = event.target.result;
-
-    event.target.transaction.onerror = myVK.indexedDB.onerror;
-
-    // if (db.objectStoreNames.contains("user")) {
-    //   db.deleteObjectStore("user");
-    // }
-
-    var store = db.createObjectStore("user", {keyPath: "id"});
+    if (!thisDB.objectStoreNames.contains("user")) {
+      var store = db.createObjectStore("user", {keyPath: "id"});
+    }
 
     store.createIndex("rating", "rating", {unique: false});
+    event.target.transaction.onerror = myVK.indexedDB.onerror;
   };
 
   request.onsuccess = function(event) {
     myVK.indexedDB.db = event.target.result;
-    // myVK.indexedDB.getAllUsers();
     console.log("DB open successful!");
   };
 
@@ -55,33 +50,35 @@ myVK.indexedDB.open = function() {
 //   return isUserProcessed; 
 // };
 
-myVK.indexedDB.getAllUsers = function() {
+myVK.indexedDB.getAllUsers = function(callback) {
   var userIds = [];
   var request = indexedDB.open("Users", dbVersion);
 
   request.onsuccess = function(event) {
     var db = event.target.result;
-    var trans = db.transaction(["user"], "readwrite");
+    var trans = db.transaction(["user"], "readonly");
     var store = trans.objectStore("user");
 
-    // Get everything in the store;
+    trans.oncomplete = function(evt) {
+      callback(userIds);
+    };
+
+    // Get everything in the store
     var keyRange = IDBKeyRange.lowerBound(0);
     var cursorRequest = store.openCursor(keyRange);
 
-    cursorRequest.onsuccess = function(event) {
-      var result = event.target.result;
+    cursorRequest.onsuccess = function(ev) {
+      var result = ev.target.result;
       if (!!result == false) return;
 
-      userIds.push(result.id);
+      userIds.push(result.value.id);
       result.continue();
     };
 
-    request.onerror = function(event) {
-      console.log(event.value);
-    };
-  }
-
-  return userIds; 
+    // request.onerror = function(event) {
+    //   console.log(event.value);
+    // };
+  };
 };
 
 myVK.indexedDB.insertUser = function(userId, userRating) {
@@ -104,27 +101,27 @@ myVK.indexedDB.insertUser = function(userId, userRating) {
     request.onerror = function(event) {
       console.log(event.value);
     };
-  }
+  };
 };
 
 // function getUser(userId) {
 //   return myVK.indexedDB.getUser(userId);
 // }
 
-function getAllUsers() {
-  return myVK.indexedDB.getAllUsers();
+function getAllUsers(callback) {
+  return myVK.indexedDB.getAllUsers(callback);
 }
 
 function insertUser(userId, userRating) {
   myVK.indexedDB.insertUser(userId, userRating);
 }
 
-function init() {
-  myVK.indexedDB.open();
-}
+// function init() {
+//   myVK.indexedDB.open();
+// }
 
 myVK.indexedDB.onerror = function() {
   console.log("Encountered an error");
 };
 
-window.addEventListener("DOMContentLoaded", init, false);
+// window.addEventListener("DOMContentLoaded", init, false);
