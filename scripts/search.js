@@ -20,7 +20,7 @@ function rateButtonsHandler() {
   userRatingEndIndex = id.length;  // encapsulation violation here
   userRating = id.slice(userRatingStartIndex, userRatingEndIndex);
 
-  insertUser(userId, userRating);
+  insertUser(userId, userRating, refreshUI);
 }
 
 // function clickGoodHandler(id) {
@@ -40,7 +40,7 @@ function drawRateButtons(node, nodeUserId) {
   btnBad.innerText = "Bad";
   btnBad.id = "user" + nodeUserId + "_rating" + "Bad";
   // btnBad.onclick = clickBadHandler;
-  btnGood.onclick = rateButtonsHandler;
+  btnBad.onclick = rateButtonsHandler;
 
   btnGood.style.float = "right";
   btnBad.style.float = "right";
@@ -50,7 +50,6 @@ function drawRateButtons(node, nodeUserId) {
 }
 
 function hideUsers(callback) {
-  // return HIDE_LIST;
   getAllUsers(callback);
 }
 
@@ -76,4 +75,9 @@ function filterSearch(hideList) {
   }
 }
 
-hideUsers(filterSearch);
+function refreshUI() {
+  hideUsers(filterSearch);  
+}
+
+// hideUsers(filterSearch);
+refreshUI();

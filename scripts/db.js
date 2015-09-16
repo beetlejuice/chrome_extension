@@ -81,7 +81,7 @@ myVK.indexedDB.getAllUsers = function(callback) {
   };
 };
 
-myVK.indexedDB.insertUser = function(userId, userRating) {
+myVK.indexedDB.insertUser = function(userId, userRating, callback) {
   var request = indexedDB.open("Users", dbVersion);
   
   request.onsuccess = function(event) {
@@ -96,6 +96,7 @@ myVK.indexedDB.insertUser = function(userId, userRating) {
 
     request.onsuccess = function(event) {
       console.log("User insert successful!");
+      callback();
     };
 
     request.onerror = function(event) {
@@ -112,8 +113,8 @@ function getAllUsers(callback) {
   return myVK.indexedDB.getAllUsers(callback);
 }
 
-function insertUser(userId, userRating) {
-  myVK.indexedDB.insertUser(userId, userRating);
+function insertUser(userId, userRating, callback) {
+  myVK.indexedDB.insertUser(userId, userRating, callback);
 }
 
 // function init() {
