@@ -1,4 +1,3 @@
-// var HIDE_LIST = ["9239849", "256150206"];
 var FILTER_ENABLED = true;
 
 function getId(searchDiv) {
@@ -79,5 +78,5 @@ function refreshUI() {
   hideUsers(filterSearch);  
 }
 
-// hideUsers(filterSearch);
 refreshUI();
+window.addEventListener("scroll", refreshUI);  // loads CPU a lot..
