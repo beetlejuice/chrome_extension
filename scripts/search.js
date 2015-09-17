@@ -23,30 +23,26 @@ function rateButtonsHandler() {
   insertUser(userId, userRating, refreshUI);
 }
 
-// function clickGoodHandler(id) {
-// }
-
-// function clickBadHandler(id) {
-// }
-
 function drawRateButtons(node, nodeUserId) {
+  var divContainer = document.createElement("div");
+  divContainer.className = "rate_block";
+
   var btnGood = document.createElement("button");
   btnGood.innerText = "Good";
   btnGood.id = "user" + nodeUserId + "_rating" + "Good";
-  // btnGood.onclick = clickGoodHandler;
   btnGood.onclick = rateButtonsHandler;
 
   var btnBad = document.createElement("button");
   btnBad.innerText = "Bad";
   btnBad.id = "user" + nodeUserId + "_rating" + "Bad";
-  // btnBad.onclick = clickBadHandler;
   btnBad.onclick = rateButtonsHandler;
 
   btnGood.style.float = "right";
   btnBad.style.float = "right";
 
-  node.appendChild(btnGood);
-  node.appendChild(btnBad);
+  node.appendChild(divContainer);
+  divContainer.appendChild(btnGood);
+  divContainer.appendChild(btnBad);
 }
 
 function hideUsers(callback) {
@@ -65,11 +61,15 @@ function filterSearch(hideList) {
   var displayedUsers = document.querySelectorAll(".people_row.three_col_row.clear_fix");
   if (displayedUsers.length != 0) {
     for (var i = 0; i < displayedUsers.length - 1; i++) {
-      var id = getId(displayedUsers[i]);
-      drawRateButtons(displayedUsers[i], id);  // add check if buttons are not already shown; maybe do not pass an id
+      user = displayedUsers[i];
+      var id = getId(user);
+
+      if (user.querySelectorAll(".rate_block").length == 0) {  // another encapsulation violation
+        drawRateButtons(user, id);
+      }
 
       if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
-        hideNode(displayedUsers[i]);
+        hideNode(user);
       }
     }
   }
