@@ -66,7 +66,7 @@ function filterSearch(hideList) {
   if (displayedUsers.length != 0) {
     for (var i = 0; i < displayedUsers.length - 1; i++) {
       var id = getId(displayedUsers[i]);
-      drawRateButtons(displayedUsers[i], id);
+      drawRateButtons(displayedUsers[i], id);  // add check if buttons are not already shown; maybe do not pass an id
 
       if (hideList.indexOf(id) > -1) {  // will be tooo slow to do it each time, need to cache hideList and remove items that have been hidden
         hideNode(displayedUsers[i]);
