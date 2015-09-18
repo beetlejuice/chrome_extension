@@ -14,8 +14,7 @@
   "content_scripts": [
     {
       "matches": ["http://vk.com/search*", "https://vk.com/search*"],
-      "js": ["contentscript.js"],
-      "run_at": "document_end"
+      "js": ["contentscript.js", "scripts/db.js", "scripts/search.js"]
     }
   ],
 
